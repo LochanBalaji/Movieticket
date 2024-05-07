@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Management</title>
+    <link rel="stylesheet" href="/static/st.css">
+</head>
+<body>
+    <h1>Restaurant Management</h1>
+    
+    <!-- Display list of dishes -->
+    <h2>All Dishes</h2>
+    <ul>
+        {% for dish in dishes %}
+            <li>ID: {{ dish[0] }}, Name: {{ dish[1] }}, Description: {{ dish[2] }}, Price: {{ dish[3] }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Add a new dish -->
+    <h2>Add Dish</h2>
+    <form action="/add" method="post">
+        Name: <input type="text" name="name" required><br>
+        Description: <input type="text" name="description" required><br>
+        Price: <input type="number" name="price" required><br>
+        <input type="submit" value="Add Dish">
+    </form>
+
+    <!-- Update a dish -->
+    <h2>Update Dish</h2>
+    <form action="/update" method="post">
+        ID: <input type="number" name="id" required><br>
+        Name: <input type="text" name="name"><br>
+        Description: <input type="text" name="description"><br>
+        Price: <input type="number" name="price"><br>
+        <input type="submit" value="Update Dish">
+    </form>
+
+    <!-- Delete a dish -->
+    <h2>Delete Dish</h2>
+    <form action="/delete" method="post">
+        ID: <input type="number" name="id" required><br>
+        <input type="submit" value="Delete Dish">
+    </form>
+
+    <!-- Search for dishes -->
+    <h2>Search Dishes</h2>
+    <form action="/search" method="get">
+        Query: <input type="text" name="query"><br>
+        <input type="submit" value="Search">
+    </form>
+
+    <div id="search-results"></div>
+    
+    <!-- Script to handle search results -->
+    <script>
+        document.querySelector('form[action="/search"]').addEventListener('submit', function(event) {
+            event.preventDefault();
+            fetch(/search?query=${document.querySelector('input[name="query"]').value})
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = '';
+                    data.forEach(dish => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = ID: ${dish[0]}, Name: ${dish[1]}, Description: ${dish[2]}, Price: ${dish[3]};
+                        resultsDiv.appendChild(listItem);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
